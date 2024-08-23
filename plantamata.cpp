@@ -1,16 +1,11 @@
 #include <stdio.h>
 #include <iostream>
 #include "include/raylib.h"
-#include "src/Character.cpp"
-
-
+#include "src/Character.cpp"  // Changed from .cpp to .h
 
 int main(void)
 {
     // Initialization
-
-    std::cout << "awewewe" << std::endl;
-
     const int screenWidth = 800;
     const int screenHeight = 450;
 
@@ -25,24 +20,17 @@ int main(void)
     while (!WindowShouldClose())
     {
         // Update
-
-        player.MoveLeft();
-        if (IsKeyDown(KEY_RIGHT) == true) {player.MoveRight();}
-        if (IsKeyDown(KEY_UP) == true) {player.MoveUp();}
-        if (IsKeyDown(KEY_DOWN) == true) {player.MoveDown();}
-        player.Update();
+        float deltaTime = GetFrameTime();
+        player.Update(deltaTime);
 
         // Draw
         BeginDrawing();
-        ClearBackground(BLACK);
-       
         
+        ClearBackground(GRAY);
         player.Draw();
-        
         DrawFPS(10, 10);
-          
+        
         EndDrawing();
-      
     }
 
     CloseWindow(); 

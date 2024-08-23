@@ -1,49 +1,78 @@
 #include "Character.h"
 #include <iostream>
 
-Character::Character(float x, float y) : position{x, y}, speed{5.0f} {
-    // Load character sprite
-    // sprite = LoadTexture("path/to/your/character/sprite.png");
-    sprite : DrawCircle(x,y, 5, WHITE);
+Character::Character(float x, float y) : 
+    position{x, y},
+    speed{5.0f},
+    frameCount{5},
+    frameWidth{32},
+    currentFrame{0},
+    animationTimer{0.0f},
+    frameTime{0.1f},
+    facingLeft{false}
+{
+    sprite = LoadTexture("resources/character/maincebolla-sheet.png");
+    source = {0, 0, static_cast<float>(frameWidth), static_cast<float>(frameWidth)};
+    dest = {x, y, static_cast<float>(frameWidth * 2), static_cast<float>(frameWidth * 2)};
 }
 
 Character::~Character() {
-    // Unload character sprite
     UnloadTexture(sprite);
 }
 
-void Character::Update() {
-    // Update character logic here
-    // This could include checking for input, updating position, etc.
+void Character::Update(float deltaTime) {
+    bool isMoving = false;
+
+    if (IsKeyDown(KEY_LEFT)) {
+        position.x -= speed * deltaTime * 50;
+        facingLeft = true;
+        isMoving = true;
+    } 
+    if (IsKeyDown(KEY_RIGHT)) {
+        position.x += speed * deltaTime * 50;
+        facingLeft = false;
+        isMoving = true;
+    }  
+    if (IsKeyDown(KEY_DOWN)) {
+        position.y += speed * deltaTime * 50;
+        isMoving = true;
+    }  
+    if (IsKeyDown(KEY_UP)) {
+        position.y -= speed * deltaTime * 50;
+        isMoving = true;
+    }
+
+    if (isMoving) {
+        UpdateAnimation(deltaTime);
+    }
+
+    // Update destination rectangle
+    dest.x = position.x;
+    dest.y = position.y;
+}
+
+void Character::UpdateAnimation(float deltaTime) {
+    animationTimer += deltaTime;
+    if (animationTimer >= frameTime) {
+        currentFrame = (currentFrame + 1) % frameCount;
+        source.x = static_cast<float>(currentFrame * frameWidth);
+        animationTimer -= frameTime;
+    }
 }
 
 void Character::Draw() {
-    sprite : DrawCircle(position.x,position.y, 5, WHITE);
-    // Draw the character
-    // DrawTextureV(sprite, position, WHITE);
-}
+    Rectangle drawSource = source;
+    Rectangle drawDest = dest;
 
-void Character::MoveLeft() {
-    // Implement left movement
-    if (IsKeyDown(KEY_LEFT) == true) {
-    position.x -= speed;
-    } 
-    // position.x -= speed;
-}
+    if (!facingLeft) {
+        drawSource.width = -source.width;  // Flip the source rectangle
+    }
 
-void Character::MoveRight() {
-    // Implement right movement
-    position.x += speed;
-}
+    DrawTexturePro(sprite, drawSource, drawDest, {0, 0}, 0, WHITE);
 
-void Character::MoveUp() {
-    // Implement upward movement
-    position.y -= speed;
-}
-
-void Character::MoveDown() {
-    // Implement downward movement
-    position.y += speed;
+    // // Debug drawing
+    // DrawRectangleLines(dest.x, dest.y, dest.width, dest.height, RED);
+    // DrawCircle(dest.x, dest.y, 3, BLUE);  // Origin point
 }
 
 Vector2 Character::GetPosition() const {
