@@ -10,6 +10,8 @@ int main(void)
     const int screenWidth = 800;
     const int screenHeight = 450;
 
+    
+
     InitWindow(screenWidth, screenHeight, "Plantamata");
     SetTargetFPS(60); 
 
@@ -21,6 +23,12 @@ int main(void)
     Character player(screenWidth/2, screenHeight/2);
     std::cout << "Player initialized" << std::endl;
 
+    Camera2D camera = { 0 };
+    camera.offset = { screenWidth/2 - player.frameWidth, screenHeight/2 - player.frameWidth };
+    camera.target = player.position;
+    camera.rotation = 0;
+    camera.zoom = 1;
+
     // Main game loop
     while (!WindowShouldClose())
     {
@@ -30,14 +38,19 @@ int main(void)
 
         // Draw
         BeginDrawing();
+        BeginMode2D(camera); 
+
+
         
-        ClearBackground(GRAY);
+        ClearBackground(Color {240, 240, 240, 226});
         drawWorld();
         player.Draw();
+        camera.target = player.position;
 
         DrawFPS(10, 10);
-        
+        EndMode2D();
         EndDrawing();
+        
     }
 
     CloseWindow(); 

@@ -5,7 +5,7 @@
 
 class Character {
 private:
-    Vector2 position;
+   
     float speed;
     Texture2D sprite;
     Rectangle source;
@@ -13,12 +13,14 @@ private:
 
     int currentFrame;
     int frameCount;
-    float frameWidth;
+    
     float animationTimer;
     float frameTime;
     bool facingLeft;
 
 public:
+ Vector2 position;
+ float frameWidth;
     Character(float x, float y);
     ~Character();
 
