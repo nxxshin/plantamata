@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <iostream>
 #include "include/raylib.h"
-#include "src/Character.cpp"  // Changed from .cpp to .h
+#include "src/Character.cpp"
+#include "src/worldgen/worldgen.cpp"
 
 int main(void)
 {
@@ -11,6 +12,10 @@ int main(void)
 
     InitWindow(screenWidth, screenHeight, "Plantamata");
     SetTargetFPS(60); 
+
+    std::cout << "Creating player..." << std::endl;
+    worldGen();
+    std::cout << "Player initialized" << std::endl;
 
     std::cout << "Creating player..." << std::endl;
     Character player(screenWidth/2, screenHeight/2);
@@ -27,7 +32,9 @@ int main(void)
         BeginDrawing();
         
         ClearBackground(GRAY);
+        drawWorld();
         player.Draw();
+
         DrawFPS(10, 10);
         
         EndDrawing();
