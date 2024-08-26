@@ -59,14 +59,10 @@ void createGrid(int GRID_SIZE) {
         assignTile(sourceX, sourceY);
         grid[i][j].sourceX = sourceX;
         grid[i][j].sourceY = sourceY;
-
        
-        
     }
 }
 }
-
-
 
 void drawWorld() {
 
